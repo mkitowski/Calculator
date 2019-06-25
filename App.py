@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QLineEdit, QPushButton, QHBoxLayout
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt
 
+
 class Kalkulator(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -23,55 +24,77 @@ class Kalkulator(QWidget):
         self.resize(300, 100)
         self.setWindowTitle("Prosty kalkulator")
         self.show()
-# labelki
-        etykieta1 = QLabel("Liczba 1:", self)
-        etykieta2 = QLabel("Liczba 2:", self)
-        etykieta3 = QLabel("Wynik:", self)
+        # labelki
+        etykieta1 = QLabel("Calculator", self)
 
         # przypisanie widgetów do układu tabelarycznego
-        ukladT = QGridLayout()
-        ukladT.addWidget(etykieta1, 0, 0)
-        ukladT.addWidget(etykieta2, 0, 1)
-        ukladT.addWidget(etykieta3, 0, 2)
+        layoutT = QGridLayout()
+        layoutT.addWidget(etykieta1, 0, 0)
 
         # 1-liniowe pola edycyjne
-        self.liczba1Edt = QLineEdit()
-        self.liczba2Edt = QLineEdit()
-        self.wynikEdt = QLineEdit()
+        self.windowEdt = QLineEdit()
 
-        self.wynikEdt.readonly = True
-        self.wynikEdt.setToolTip('Wpisz <b>liczby</b> i wybierz działanie...')
+        self.windowEdt.readonly = True
+        self.windowEdt.setToolTip('write <b>numbers</b> and select ...')
 
-        ukladT.addWidget(self.liczba1Edt, 1, 0)
-        ukladT.addWidget(self.liczba2Edt, 1, 1)
-        ukladT.addWidget(self.wynikEdt, 1, 2)
+        layoutT.addWidget(self.windowEdt, 1, 0)
+        # ukladT.addWidget(self.liczba2Edt, 1, 1)
+        # ukladT.addWidget(self.wynikEdt, 1, 2)
 
-        # przyciski
-        dodajBtn = QPushButton("&Dodaj", self)
-        odejmijBtn = QPushButton("&Odejmij", self)
-        dzielBtn = QPushButton("&Mnóż", self)
-        mnozBtn = QPushButton("D&ziel", self)
-        koniecBtn = QPushButton("&Koniec", self)
-        koniecBtn.resize(koniecBtn.sizeHint())
+        # buttons - numbers
+        numbersBtns = {
+            'oneBtn': QPushButton('1', self),
+            'twoBtn': QPushButton('2', self),
+            'threeBtn': QPushButton('3', self),
+            'fourBtn': QPushButton('4', self),
+            'fiveBtn': QPushButton('5', self),
+            'sixBtn': QPushButton('6', self),
+            'sevenBtn': QPushButton('7', self),
+            'eightBtn': QPushButton('8', self),
+            'nineBtn': QPushButton('9', self),
+            'zeroBtn': QPushButton('0', self),
+            'comaBtn': QPushButton(',', self)
+        }
 
-        ukladH = QHBoxLayout()
-        ukladH.addWidget(dodajBtn)
-        ukladH.addWidget(odejmijBtn)
-        ukladH.addWidget(dzielBtn)
-        ukladH.addWidget(mnozBtn)
+        # buttons - dzialanie
+        i = 0
+        j = 0
+        layoutNumbers = QGridLayout()
+        for button in numbersBtns:
+            layoutNumbers.addWidget(numbersBtns[button],j,i)
+            i += 1
+            if i > 2 :
+                i = 0
+                j += 1
 
-        ukladT.addLayout(ukladH, 2, 0, 1, 3)
-        ukladT.addWidget(koniecBtn, 3, 0, 1, 3)
+        layoutT.addLayout(layoutNumbers, 2, 0, 1, 3)
 
-        dodajBtn.clicked.connect(self.dzialanie)
-        odejmijBtn.clicked.connect(self.dzialanie)
-        mnozBtn.clicked.connect(self.dzialanie)
-        dzielBtn.clicked.connect(self.dzialanie)
 
-        koniecBtn.clicked.connect(self.koniec)
+        dodajBtn = QPushButton("+", self)
+        odejmijBtn = QPushButton("-", self)
+        dzielBtn = QPushButton("*", self)
+        mnozBtn = QPushButton("/", self)
+        koniecBtn = QPushButton("&Close", self)
+        # koniecBtn.resize(koniecBtn.sizeHint())
+
+        layoutH = QHBoxLayout()
+        layoutH.addWidget(dodajBtn)
+        layoutH.addWidget(odejmijBtn)
+        layoutH.addWidget(dzielBtn)
+        layoutH.addWidget(mnozBtn)
+
+        layoutT.addLayout(layoutH, 2, 1, 1, 3)
+        layoutT.addWidget(koniecBtn, 3, 0, 1, 3)
+
+        # dodajBtn.clicked.connect(self.dzialanie)
+        # odejmijBtn.clicked.connect(self.dzialanie)
+        # mnozBtn.clicked.connect(self.dzialanie)
+        # dzielBtn.clicked.connect(self.dzialanie)
+
+        # koniecBtn.clicked.connect(self.koniec)
 
         # przypisanie utworzonego układu do okna
-        self.setLayout(ukladT)
+        self.setLayout(layoutT)
 
         self.setGeometry(20, 20, 300, 100)
         self.setWindowIcon(QIcon('kalkulator.png'))
@@ -124,6 +147,7 @@ class Kalkulator(QWidget):
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Escape:
             self.close()
+
 
 if __name__ == '__main__':
     import sys
